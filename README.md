@@ -1,9 +1,26 @@
 ## TEAM to do list:
 ```
-[] Make playerone and playertwo seperate entities.
-[] Add a reset button so player's can play another round.
-[] Allow both players to collision into eachother.
-[] Rename 'snake' folder to 'cycle' without messing up all the existing code.
+Priorities:
+[ ] Create enemies that start at the top and move down towards the player.
+[ ] Make enemies able to collide with bullets.
+[ ] Allow the player's segments to be able to collide with enemies
+[ ] Create pickup items that can be collected by the player to grant Health, Lives, or Score.
+[ ] Create a child class of pickup objects that upgrades the player's weapon.
+Optional:
+[ ] Add sound files to the game along with background music
+[ ] Create more powerups
+[ ] Add hitpoints to enemies to make them more resistant to bullets.
+[ ] Make a class of enemy that can shoot bullets at the player
+[ ] Create a time delay when the player loses a life
+[ ] Make the 'P' key pause the game and all entities on the screen. 
+[ ] Mess around with the code!
+[ ] Clean up & simplify any messy parts of the code.
+Completed:
+[v] Setup the layout of the game and allow for easy additions to be made.
+[v] Create ship that moves up, down, left, right using 'W'A'S'D'
+[v] Make the ship shoot when pressing 'space'
+[v] Track the player's lives, health, and score
+[v] End the game when player's lives and health hit 0.
 ```
 ---
 
