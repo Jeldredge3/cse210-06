@@ -21,7 +21,7 @@ class Player(Actor):
         # ===== Ship Parts ===== #
         self._segments = []
         self._front = "A"
-        self._body = "M"
+        self._body = "Testing branch"
         self._wing_left = "-"
         self._wing_right = "-"
         self._trail = "+"
