@@ -1,7 +1,6 @@
 
 import constants
 import random
-import math
 from game.casting.actor import Actor
 from game.casting.projectiles import Bullet, MultiShot, LongShot, FlameThrower
 from game.shared.point import Point
@@ -170,4 +169,3 @@ class Player(Actor):
                     self._bullets.append(bullet)
                     velocity = Point(rand_x_direction, y_direction)
                     bullet.fire(pos_x, pos_y, velocity)
-                    
