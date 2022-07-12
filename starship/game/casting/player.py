@@ -170,3 +170,4 @@ class Player(Actor):
                     self._bullets.append(bullet)
                     velocity = Point(rand_x_direction, y_direction)
                     bullet.fire(pos_x, pos_y, velocity)
+                    
