@@ -28,16 +28,16 @@ class HandleCollisionsAction(Action):
     def _handle_segment_collision(self, cast):
         """Sets the game over flag if the snake collides with one of its segments.
         """
-        p1 = cast.get_first_actor("player")
-        p1_body = p1.get_segments()[0]
-        p1_segments = p1.get_segments()[1:]
+        player = cast.get_first_actor("player")
+        p_body = player.get_segments()[0]
+        p_segments = player.get_segments()[1:]
 
     def _handle_pickup_collision(self, cast):
         """Sets the game over flag if the snake collides with one of its segments.
         """
-        p1 = cast.get_first_actor("player")
-        p1_body = p1.get_segments()[0]
-        p1_segments = p1.get_segments()[1:]
+        player = cast.get_first_actor("player")
+        p_body = player.get_segments()[0]
+        p_segments = player.get_segments()[1:]
         
 
 

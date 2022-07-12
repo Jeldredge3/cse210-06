@@ -24,8 +24,8 @@ class DrawActorsAction(Action):
             script (Script): The script of Actions in the game.
         """
         player = cast.get_first_actor("player")
-        p1_segments = player.get_segments()
-        p1_bullets = player.get_bullets()
+        p_segments = player.get_segments()
+        p_bullets = player.get_bullets()
 
         enemies = cast.get_actors("enemy")
         pickups = cast.get_actors("pickup")
@@ -38,8 +38,8 @@ class DrawActorsAction(Action):
 
         self._video_service.clear_buffer()
         self._video_service.draw_actor(player)
-        self._video_service.draw_actors(p1_segments)
-        self._video_service.draw_actors(p1_bullets, True)
+        self._video_service.draw_actors(p_segments)
+        self._video_service.draw_actors(p_bullets, True)
 
         self._video_service.draw_actors(pickups)
         self._video_service.draw_actors(enemies)
