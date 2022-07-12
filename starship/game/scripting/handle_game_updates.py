@@ -13,7 +13,7 @@ class HandleGameUpdates(Action):
         """Constructs a new HandleCollisionsAction."""
         self._is_game_over = False
         self._victory = False
-        
+
     def execute(self, cast, script):
         player = cast.get_first_actor("player")
         hitpoints = cast.get_first_actor("hitpoints")

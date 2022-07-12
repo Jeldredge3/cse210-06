@@ -1,6 +1,7 @@
 
 import constants
 import random
+import math
 from game.casting.actor import Actor
 from game.casting.projectiles import Bullet, MultiShot, LongShot, FlameThrower
 from game.shared.point import Point
@@ -19,12 +20,16 @@ class Player(Actor):
         self._out_of_lives = False
         self._is_destroyed = False
         # ===== Ship Parts ===== #
+        """Ship segments goes in this order: 
+        [Center, Middle, Front, Top-Left, Middle-left, Bottom-Left, Top-Right, Middle-Right, Bottom-Right]
+        """
+        ship_blueprint_rocket     = ["X", "| |", "A", "", "/", "|/", "", "\\", "\\|"]
+        ship_blueprint_glider     = ["V", "| |", "i i", "", "|/", "|/", "", "\\|", "\\|"]
+        ship_blueprint_stinger    = ["M", "| |", "U", "i", "|\\", "\\", "  i", "/|", "/"]
+        ship_blueprint_falcon     = ["V", "| |", "U", "", "/", "\\", "", "\\|", "/"]
+        ship_blueprint_x_wing     = ["V", "| |", "A", "", "|_", "\\", "", "_|", "/"]
+        self._selected_blueprint = ship_blueprint_x_wing
         self._segments = []
-        self._front = "A"
-        self._body = "M"
-        self._wing_left = "-"
-        self._wing_right = "-"
-        self._trail = "+"
         # ===== Bullets ===== #
         self._can_shoot = True
         self._firing_modes = [0, 1, 2, 3]
@@ -85,42 +90,48 @@ class Player(Actor):
             self._segments[i].set_velocity(velocity)
 
     def _prepare_body(self, pos_x, pos_y, set_color):
-        """Create the body of the starship.
+        """Create the body of the spaceship. All parts of the ship are relevant to the position of the ship's center.
         Arg:
             pos_x = The x position of the object.  
             pos_y = The y position of the object.    
             color = The color of the object.
         """
         cell_size = constants.CELL_SIZE
-        velocity = Point(1*constants.CELL_SIZE, 0)
         color = set_color
         self._color = set_color
         self._start_position = Point(pos_x, pos_y)
 
-        # ===== Ship Body ===== #
-        position = Point(pos_x, pos_y)
-        text = self._body
-        self.__add_ship_part(position, velocity, text, color)
-        # ===== Right Wing ===== #
-        position = Point(pos_x + 1*cell_size, pos_y)
-        text = self._wing_right
-        self.__add_ship_part(position, velocity, text, color)
-        # ===== Left Wing ===== #
-        position = Point(pos_x - 1*cell_size, pos_y)
-        text = self._wing_left
-        self.__add_ship_part(position, velocity, text, color)
-        # ===== Ship Front ===== #
-        position = Point(pos_x, pos_y - 1*cell_size)
-        text = self._front
-        self.__add_ship_part(position, velocity, text, color)
-
-    def __add_ship_part(self, position, velocity, text, color):
-        ship_part = Actor()
-        ship_part.set_position(position)
-        ship_part.set_velocity(velocity)
-        ship_part.set_text(text)
-        ship_part.set_color(color)
-        self._segments.append(ship_part)
+        index = 0
+        # store each part of the ship to the segments list.
+        for ship_part in self._selected_blueprint:
+            if index == 0: # Center
+                position = Point(pos_x, pos_y)
+            elif index == 1: # Middle
+                position = Point(pos_x, pos_y - cell_size)
+            elif index == 2: # Front
+                position = Point(pos_x, pos_y - 2*cell_size)
+            elif index == 3: # Top_left
+                position = Point(pos_x - cell_size, pos_y - 2*cell_size)
+            elif index == 4: # Middle_Left
+                position = Point(pos_x - cell_size, pos_y - cell_size)
+            elif index == 5: # Bottom_Left
+                position = Point(pos_x - cell_size, pos_y)
+            elif index == 6: # Top_Right
+                position = Point(pos_x + cell_size, pos_y - 2*cell_size)
+            elif index == 7: # Middle_Right
+                position = Point(pos_x + cell_size, pos_y - cell_size)
+            elif index == 8: # Bottom_Right
+                position = Point(pos_x + cell_size, pos_y)
+            else:
+                break
+            # create an object for each segment of the ship.
+            text = str(ship_part)
+            ship_part = Actor()
+            ship_part.set_position(position)
+            ship_part.set_text(text)
+            ship_part.set_color(color)
+            self._segments.append(ship_part)
+            index += 1
 
     def shoot(self, pos_x, pos_y):
         """Shoots a projectiles based on the fire_mode setting."""
