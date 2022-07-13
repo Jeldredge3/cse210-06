@@ -18,8 +18,8 @@ class HandleGameUpdates(Action):
         player = cast.get_first_actor("player")
         hitpoints = cast.get_first_actor("hitpoints")
         lives = cast.get_first_actor("lives")
-        current_hp = hitpoints._get_value()
-        current_lives = lives._get_value()
+        current_hp = hitpoints.get_value()
+        current_lives = lives.get_value()
 
         if not self._is_game_over:
             # check if player hitpoints have fallen to zero.

@@ -4,49 +4,93 @@ from game.shared.color import Color
 from game.shared.point import Point
 
 class Display(Actor):
-    """A heads-up display (HUD) element in the game. Displays the name of the element along with it's value. 
+    """Represents a heads-up display (HUD). Displays the name of a statistic along with it's value. 
 
     Attributes:
-        _name:
-        _text:              The name of the HUD element which is displayed.
+        _name:              The name of the HUD element which is displayed.
         _value:             The string value that is displayed next to the text.
-        _total_points:      An integer value which is updated with the add() & subtract() methods.
-        _self.set_text():   String display containing the element's text and value.
     """
     def __init__(self):
         super().__init__()
-        self._name = " "
-        self._value = 0
-        self._max_limit = float('inf')
+        self._name = "Unknown"
+        self._value = None
+        # Update the displayed text.
+        self.update_display()
+
+    def update_display(self):
         self.set_text(f"{self._name}: {self._value}")
 
-    def _prepare_self(self, pos_x, pos_y, set_color):
+    def prepare_self(self, pos_x, pos_y, color, name):
+        """Places the element at the position that was passed through.
+        """
+        self._position = Point(pos_x, pos_y)
+        self._color = color
+        self._name = name
+        self.set_position(self._position)
+        self.update_display()
+
+    def get_name(self):
+        return self._name
+    
+    def get_value(self):
+        return self._value
+
+    def set_name(self, name):
+        self._name = name
+        self.update_display()
+
+    def set_value(self, value):
+        self._value = value
+        self.update_display()
+
+class VariableDisplay(Display):
+    """A heads-up display (HUD) element in the game which displays an integer value.
+
+    Attributes:
+        _name:              The name of the HUD element which is displayed.
+        _value:             The string value that is displayed next to the text.
+        _max_limit:         An integer value which is updated with the add() & subtract() methods.
+    """
+    def __init__(self):
+        super().__init__()
+        self._name = "Integer"
+        self._value = 0
+        self._max_limit = float('inf')
+        self.update_display()
+
+    def prepare_self(self, pos_x, pos_y, set_color, name):
         """Places the element at the position that was passed through.
         """
         self._position = Point(pos_x, pos_y)
         self._color = set_color
+        self._name = name
+        if name == "Lives":
+            self._value = constants.START_LIVES
+            self._max_limit = constants.MAX_LIVES
+        elif name == "Hitpoints":
+            self._value = constants.START_HITPOINTS
+            self._max_limit = constants.MAX_HITPOINTS
+        elif name == "Score":
+            self._value = 0
+            self._max_limit = float('inf')
+
         self.set_position(self._position)
-
-    def _get_name(self):
-        return self._name
-
-    def _get_value(self):
-        return self._value
-
-    def _get_max_limit(self):
+        self.update_display()
+        
+    def get_max_limit(self):
         return self._max_limit
 
     def _add(self, points):
         """Adds the given points to the element's total points.
         """
-        max_limit = self._get_max_limit()
+        max_limit = self.get_max_limit()
         if self._value < max_limit:
             old_value = self._value
             self._value += points
             new_value = self._value
             print(f"{self._name}: {old_value} => {new_value}")
             # update display tracker
-            self.set_text(f"{self._name}: {self._value}")
+            self.update_display()
         else:
             print(f"{self._name}: {max_limit}")
         
@@ -60,50 +104,23 @@ class Display(Actor):
             new_value = self._value
             print(f"{self._name}: {old_value} => {new_value}")
             # update display tracker
-            self.set_text(f"{self._name}: {self._value}")
+            self.update_display()
         else:
             print(f"{self._name}: 0")
         #self.set_text(f"{self._text}: {self._total_points}")
 
-class Lives(Display):
-    """Keeps track of how many attempts the player has left.
-    """
-    def __init__(self):
-        super().__init__()
-        self._name = "Lives"
-        self._value = constants.START_LIVES
-        self._max_limit = constants.MAX_LIVES
-        self.set_text(f"{self._name}: {self._value}")
+class ListDisplay(Display):
+    """A heads-up display (HUD) element in the game which displays an list for it's value.
 
-class Hitpoints(Display):
-    """Displays the player's health.
+    Attributes:
+        _name:              The name of the HUD element which is displayed.
+        _value:             The string value that is displayed next to the text.
     """
     def __init__(self):
         super().__init__()
-        self._name = "Hitpoints"
-        self._value = constants.START_HITPOINTS
-        self._max_limit = constants.MAX_HITPOINTS
-        self.set_text(f"{self._name}: {self._value}")
-
-class Score(Display):
-    """A record of points made or lost. 
-    """
-    def __init__(self):
-        super().__init__()
-        self._name = "Score"
-        self._points = 0
-        self.set_text(f"{self._name}: {self._value}")
-
-class Upgrades(Display):
-    """Keeps track of the items picked up by the player.
-    """
-    def __init__(self):
-        super().__init__()
-        self._position = Point(0, 0)
-        self._color = Color(30, 30, 30)
-        self._name = "Upgrades"
+        self._name = "List"
         self._value = []
-        self.set_text(f"{self._name}: {self._value}")
+        self.update_display()
 
     def _add(self, list_element):
         """Appends a new element to the list.
@@ -111,7 +128,7 @@ class Upgrades(Display):
         list_length = len(self._value)
         if list_length < constants.MAX_UPGRADES:
             self._value.append(list_element)
-            self.set_text(f"{self._name}: {self._value}")
+            self.update_display()
 
     def _subtract(self, amount_removed):
         """Removes a number of elements from the list.
@@ -120,17 +137,11 @@ class Upgrades(Display):
         for i in range(amount_removed): 
             if list_length > 0:
                 self._value.pop(-1)
-                self.set_text(f"{self._name}: {self._value}")
+                self.update_display()
             else:
                 break
-    
-    def _remove(self, list_element):
-        """Removes a specific element from the list.
-        """
-        self._value.remove(list_element)
-        self.set_text(f"{self._name}: {self._value}")
 
-    def _update(self, mode):
+    def _update_mode(self, mode):
         """Updates the display to reflect correct information.
         """
         if mode == 0:
@@ -141,4 +152,4 @@ class Upgrades(Display):
             self._value.append("LongShot")
         elif mode == 3:
             self._value.append("FlameThrower")
-        self.set_text(f"{self._name}: {self._value}")
+        self.update_display()

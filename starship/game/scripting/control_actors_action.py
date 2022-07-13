@@ -99,7 +99,7 @@ class ControlActorPlayer(ControlActorsAction):
             ship_pos = ship.get_position()
             pos_x = ship_pos.get_x()
             pos_y = ship_pos.get_y()
-            player.shoot(pos_x, pos_y - constants.CELL_SIZE)
+            player.shoot(pos_x, pos_y - 2*constants.CELL_SIZE)
 
         # ===== TEMPORARY COMMANDS ===== #
         score = cast.get_first_actor("score")
