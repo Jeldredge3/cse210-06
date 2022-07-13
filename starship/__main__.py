@@ -1,9 +1,10 @@
 import constants
+import random
 
 from game.casting.cast import Cast
 from game.casting.player import Player
 from game.casting.enemies import Enemy
-from game.casting.display import Score, Hitpoints, Lives, Upgrades 
+from game.casting.display import Display, VariableDisplay, ListDisplay
 from game.scripting.script import Script
 from game.scripting.control_actors_action import ControlActorPlayer
 from game.scripting.control_actors_action import ResetActorPositions
@@ -20,33 +21,51 @@ from game.shared.point import Point
 
 
 def main():
-    
     # create the cast
     cast = Cast()
     # define the half-way point on the grid.
-    x = int(constants.MAX_X / 2)
-    y = int(constants.MAX_Y / 2)
+    half_x = int(constants.MAX_X / 2)
+    half_y = int(constants.MAX_Y / 2)
+    # set the position for random locations, but only in increments of the cell size.
+    increment = constants.CELL_SIZE
+    rand_x = random.randrange(0, constants.MAX_X, increment)
+    rand_y = random.randrange(0, constants.MAX_Y, increment)
+    # round the half-way points to the nearest increment.
+    x = increment * round(half_x/increment)
+    y = increment * round(half_y/increment)
+
     # create the players.
     player = Player()
     cast.add_actor("player", player)
     # set the positon and color of the player. 
-    player._prepare_body(x, y, constants.WHITE)
+    player._build_ship(x, y, constants.WHITE)
     
+    # create an enemy.
+    enemy = Enemy()
+    cast.add_actor("enemy", enemy)
+    # set the positon and color of the enemy. 
+    enemy._build_ship(rand_x, 2*constants.CELL_SIZE, constants.RED)
+
     # create the scoreboard and other HUD elements.
-    score = Score()
-    hitpoints = Hitpoints()
-    lives = Lives()
-    upgrades = Upgrades()
+    score = VariableDisplay()
+    hitpoints = VariableDisplay()
+    lives = VariableDisplay()
+    upgrades = ListDisplay()
+    log_position = Display()
+    log_collision = Display()
     cast.add_actor("score", score)
     cast.add_actor("hitpoints", hitpoints)
     cast.add_actor("lives", lives)
     cast.add_actor("upgrades", upgrades)
+    cast.add_actor("log_pos", log_position)
+    cast.add_actor("log_col", log_collision)
     # set the positon and color of the HUD elements. 
-
-    lives._prepare_self(20, 4, constants.BLUE)
-    hitpoints._prepare_self(540, 4, constants.RED)
-    score._prepare_self(1040, 4, constants.GREEN)
-    upgrades._prepare_self(20, 40, constants.GOLD)
+    lives.prepare_self(20, 4, constants.BLUE, "Lives")
+    hitpoints.prepare_self(540, 4, constants.RED, "Hitpoints")
+    score.prepare_self(1040, 4, constants.GREEN, "Score")
+    upgrades.prepare_self(20, 40, constants.GOLD, "Upgrades")
+    log_position.prepare_self(980, 40, constants.BLACK, "log_Pos")
+    log_collision.prepare_self(980, 80, constants.BLACK, "log_Col")
 
     # start the game
     keyboard_service = KeyboardService()

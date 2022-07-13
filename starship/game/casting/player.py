@@ -88,7 +88,7 @@ class Player(Actor):
         for i in range(list_length):
             self._segments[i].set_velocity(velocity)
 
-    def _prepare_body(self, pos_x, pos_y, set_color):
+    def _build_ship(self, pos_x, pos_y, set_color):
         """Create the body of the spaceship. All parts of the ship are relevant to the position of the ship's center.
         Arg:
             pos_x = The x position of the object.  
