@@ -102,6 +102,8 @@ class ControlActorPlayer(ControlActorsAction):
             player.shoot(pos_x, pos_y - 2*constants.CELL_SIZE)
 
         # ===== TEMPORARY COMMANDS ===== #
+
+        """
         score = cast.get_first_actor("score")
         hitpoints = cast.get_first_actor("hitpoints")
         lives = cast.get_first_actor("lives")
@@ -124,6 +126,32 @@ class ControlActorPlayer(ControlActorsAction):
         # score - subtract
         if self._keyboard_service.is_key_down('page_down'):
             score._subtract(15)
+        """
+
+        # ===== TEMPORARY COMMANDS ===== #
+        score = cast.get_first_actor("score")
+        hitpoints = cast.get_first_actor("hitpoints")
+        lives = cast.get_first_actor("lives")
+        upgrades = cast.get_first_actor("upgrades")
+        # lives - add
+        if self._keyboard_service.is_key_down('i'):
+            lives._add(1)
+        # lives - subtract
+        if self._keyboard_service.is_key_down('j'):
+            lives._subtract(1)
+        # hitpoints - add
+        if self._keyboard_service.is_key_down('o'):
+            hitpoints._add(10)
+        # hitponts - subtract
+        if self._keyboard_service.is_key_down('k'):
+            hitpoints._subtract(10)
+        # score - add
+        if self._keyboard_service.is_key_down('p'):
+            score._add(15)
+        # score - subtract
+        if self._keyboard_service.is_key_down('l'):
+            score._subtract(15)
+
         # inventory - append random item to list
         upgrades_list = ["Laser Cannon", "Multi-Shot", "Rapid-Fire", "Overshield"]
         rand_selection = random.choice(upgrades_list)

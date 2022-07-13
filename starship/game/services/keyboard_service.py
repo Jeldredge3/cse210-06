@@ -20,12 +20,13 @@ class KeyboardService:
         self._keys['down'] = pyray.KEY_DOWN 
         self._keys['right'] = pyray.KEY_RIGHT
         # ===== Temporary Kebindings ===== #
-        self._keys['ins'] = pyray.KEY_INSERT 
-        self._keys['del'] = pyray.KEY_DELETE
-        self._keys['home'] = pyray.KEY_HOME 
-        self._keys['end'] = pyray.KEY_END
-        self._keys['page_up'] = pyray.KEY_PAGE_UP
-        self._keys['page_down'] = pyray.KEY_PAGE_DOWN
+        # ===== Temporary Kebindings ===== #
+        self._keys['i'] = pyray.KEY_I
+        self._keys['j'] = pyray.KEY_J
+        self._keys['o'] = pyray.KEY_O
+        self._keys['k'] = pyray.KEY_K
+        self._keys['p'] = pyray.KEY_P
+        self._keys['l'] = pyray.KEY_L
         self._keys['['] = pyray.KEY_LEFT_BRACKET
         self._keys[']'] = pyray.KEY_RIGHT_BRACKET
         # ===== Player Movement Kebindings ===== #

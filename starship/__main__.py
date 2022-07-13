@@ -30,7 +30,6 @@ def main():
     increment = constants.CELL_SIZE
     rand_x = random.randrange(0, constants.MAX_X, increment)
     rand_y = random.randrange(0, constants.MAX_Y, increment)
-    # round the half-way points to the nearest increment.
     x = increment * round(half_x/increment)
     y = increment * round(half_y/increment)
 
@@ -43,6 +42,7 @@ def main():
     # create an enemy.
     enemy = Enemy()
     cast.add_actor("enemy", enemy)
+    
     # set the positon and color of the enemy. 
     enemy._build_ship(rand_x, 2*constants.CELL_SIZE, constants.RED)
 

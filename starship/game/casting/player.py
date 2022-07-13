@@ -39,7 +39,7 @@ class Player(Actor):
 
     def get_segments(self):
         return self._segments
-
+        
     def get_bullets(self):
         return self._bullets
 
@@ -54,6 +54,7 @@ class Player(Actor):
 
     def reset_fire_mode(self):
         self._fire_mode = self._firing_modes[0]
+    
     
     def _cycle_mode(self):
         max_index = len(self._firing_modes) -1
