@@ -1,4 +1,4 @@
-import constants
+from constants import *
 from game.scripting.action import Action
 from game.shared.point import Point
 
@@ -21,6 +21,7 @@ class MoveActorsAction(Action):
         player = cast.get_first_actor("player")
         enemies = cast.get_actors("enemy")
         first_enemy = cast.get_first_actor("enemy")
+        particles = cast.get_actors("particle")
 
         # ===== Move Bullets ===== #
         bullets = player.get_bullets()
@@ -31,13 +32,13 @@ class MoveActorsAction(Action):
                 bullet.move_next()
             else:
                 bullets.pop(0)
-
+            
         # ===== Move Enemy Ships ===== #
         for enemy in enemies:
-            direction = Point(0, constants.CELL_SIZE)
+            direction = Point(0, CELL_SIZE)
             enemy.turn_ship(direction)
             enemy.move_next()
 
-            
-                
-            
+        # ===== Move Particles ==== #
+        for particle in particles:    
+            particle._falling()

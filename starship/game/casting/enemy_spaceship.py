@@ -6,8 +6,7 @@ from game.casting.projectiles import Bullet
 from game.shared.point import Point
 
 class Enemy(Spaceship):
-    """A Spaceship object which  The player can pickup upgrades which provide new firing modes.
-    Please see the parent class Spaceship for inherited methods and attributes.
+    """A Spaceship object that gets moved automatically, meant as an opponent for the player.
     """
     def __init__(self):
         super().__init__()
