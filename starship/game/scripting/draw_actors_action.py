@@ -30,8 +30,6 @@ class DrawActorsAction(Action):
 
         # ===== Get Enemies: Segments ===== #
         enemies = cast.get_actors("enemy")
-        for enemy in enemies:
-            e_segments = enemy.get_segments()
         # ===== Get Extras ===== #
         pickups = cast.get_actors("pickup")
         particles = cast.get_actors("particle")
@@ -58,7 +56,10 @@ class DrawActorsAction(Action):
         self._video_service.draw_actors(p_bullets, True)
         # other actors
         self._video_service.draw_actors(enemies)
-        self._video_service.draw_actors(e_segments)
+        for enemy in enemies:
+            e_segments = enemy.get_segments()
+            self._video_service.draw_actors(e_segments)
+            
         self._video_service.draw_actors(pickups)
         self._video_service.draw_actors(particles)
         # interface actors
