@@ -48,31 +48,34 @@ class HandleTimedEvents(Action):
             
         # EVENT - Player is destroyed) lock health, score, and lives values until player is repaired.
         if player._is_destroyed == True:
-            print(f"Destroyed {respawn_time}")
             player.toggle_fire(False)
             hitpoints._lock_value(True)
             score._lock_value(True)
             lives._lock_value(True)
             timer_respawn._add(1)
             # once the counter reaches 10, the player is restored back to their original state.
-            if respawn_time > 10:
-                print(f"Repaired {respawn_time}")
+            if respawn_time >= 10:
                 timer_respawn._reset_value()
                 timer_respawn._lock_value(True)
                 player.toggle_fire(True)
                 hitpoints._lock_value(False)
                 score._lock_value(False)
                 lives._lock_value(False)
+                # subtract one life from the player, restore the player to full health.
                 lives._subtract(1)
                 hitpoints._add(RESPAWN_HITPOINTS)
                 player.repair_self()
         else:
             timer_respawn._lock_value(False)
 
-        # EVENT 1) creates an enemy when 100 time has passed. 
-        if inf_growing_time == 100:
-            # create an enemy.
-            enemy = Enemy()
-            cast.add_actor("enemy", enemy)
-            # set the positon and color of the enemy. 
-            enemy._build_ship(self.rand_x, 2*CELL_SIZE, RED)
+        # EVENT 1) creates an enemy when each time event has passed. 
+        timer_event_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+        if inf_growing_time in timer_event_list:
+            for time_event in timer_event_list:
+                if inf_growing_time == time_event: 
+                    # create an enemy.
+                    enemy = Enemy()
+                    cast.add_actor("enemy", enemy)
+                    # set the positon and color of the enemy. 
+                    self.rand_x = random.randrange(0, MAX_X, CELL_SIZE)
+                    enemy._build_ship(self.rand_x, 2*CELL_SIZE, RED)

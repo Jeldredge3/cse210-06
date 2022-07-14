@@ -61,8 +61,10 @@ class HandleGameUpdates(Action):
                 for segment in p_segments:
                     segment.set_color(BLACK)
             
-            if current_score >= 1000:
+            if current_score >= 700:
                 self._victory = True
+                self._is_game_over = True
+                self._handle_game_over(cast)
 
     def _handle_game_over(self, cast):
         """Shows the 'game over' message when the player loses all lives.
