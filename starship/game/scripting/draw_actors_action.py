@@ -1,5 +1,5 @@
+from constants import *
 from game.scripting.action import Action
-
 
 class DrawActorsAction(Action):
     """An output action that draws all the actors.
@@ -40,7 +40,9 @@ class DrawActorsAction(Action):
         lives = cast.get_first_actor("lives")
         upgrades = cast.get_first_actor("upgrades")
         log_positon = cast.get_first_actor("log_pos")
+        log_bullet_position = cast.get_first_actor("log_bul")
         log_collision = cast.get_first_actor("log_col")
+        timer = cast.get_first_actor("timer")
         messages = cast.get_actors("messages")
 
         # ===== Clear Screen & Draw Actors ===== #
@@ -59,8 +61,12 @@ class DrawActorsAction(Action):
         self._video_service.draw_actor(hitpoints)
         self._video_service.draw_actor(lives)
         self._video_service.draw_actor(upgrades)
-        self._video_service.draw_actor(log_positon)
-        self._video_service.draw_actor(log_collision)
         self._video_service.draw_actors(messages, True)
+        # console log actors
+        if SHOW_CONSOLE_LOG == True:
+            self._video_service.draw_actor(log_positon)
+            self._video_service.draw_actor(log_bullet_position)
+            self._video_service.draw_actor(log_collision)
+            self._video_service.draw_actor(timer)
         # ---
         self._video_service.flush_buffer()

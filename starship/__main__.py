@@ -1,14 +1,12 @@
-import constants
 import random
+from constants import *
 
 from game.casting.cast import Cast
-from game.casting.player import Player
-from game.casting.enemies import Enemy
+from game.casting.player_spaceship import Player
+from game.casting.enemy_spaceship import Enemy
 from game.casting.display import Display, VariableDisplay, ListDisplay
 from game.scripting.script import Script
-from game.scripting.control_actors_action import ControlActorPlayer
-from game.scripting.control_actors_action import ResetActorPositions
-from game.scripting.control_actors_action import PrintPlayer
+from game.scripting.control_actors_action import ControlActorPlayer, ResetActorPositions
 from game.scripting.move_actors_action import MoveActorsAction
 from game.scripting.handle_collisions_action import HandleCollisionsAction
 from game.scripting.handle_game_updates import HandleGameUpdates
@@ -19,17 +17,16 @@ from game.services.video_service import VideoService
 from game.shared.color import Color
 from game.shared.point import Point
 
-
 def main():
     # create the cast
     cast = Cast()
     # define the half-way point on the grid.
-    half_x = int(constants.MAX_X / 2)
-    half_y = int(constants.MAX_Y / 2)
+    half_x = int(MAX_X / 2)
+    half_y = int(MAX_Y / 2)
     # set the position for random locations, but only in increments of the cell size.
-    increment = constants.CELL_SIZE
-    rand_x = random.randrange(0, constants.MAX_X, increment)
-    rand_y = random.randrange(0, constants.MAX_Y, increment)
+    increment = CELL_SIZE
+    rand_x = random.randrange(0, MAX_X, increment)
+    rand_y = random.randrange(0, MAX_Y, increment)
     x = increment * round(half_x/increment)
     y = increment * round(half_y/increment)
 
@@ -37,14 +34,14 @@ def main():
     player = Player()
     cast.add_actor("player", player)
     # set the positon and color of the player. 
-    player._build_ship(x, y, constants.WHITE)
+    player._build_ship(x, y, WHITE)
     
     # create an enemy.
     enemy = Enemy()
     cast.add_actor("enemy", enemy)
     
     # set the positon and color of the enemy. 
-    enemy._build_ship(rand_x, 2*constants.CELL_SIZE, constants.RED)
+    enemy._build_ship(rand_x, 2*CELL_SIZE, RED)
 
     # create the scoreboard and other HUD elements.
     score = VariableDisplay()
@@ -52,20 +49,28 @@ def main():
     lives = VariableDisplay()
     upgrades = ListDisplay()
     log_position = Display()
+    log_bullet_position = Display()
     log_collision = Display()
+    timer = VariableDisplay()
+    # add each new object to the cast to allow retrieval outside of this file.
     cast.add_actor("score", score)
     cast.add_actor("hitpoints", hitpoints)
     cast.add_actor("lives", lives)
     cast.add_actor("upgrades", upgrades)
     cast.add_actor("log_pos", log_position)
+    cast.add_actor("log_bul", log_bullet_position)
     cast.add_actor("log_col", log_collision)
+    cast.add_actor("timer", timer)
     # set the positon and color of the HUD elements. 
-    lives.prepare_self(20, 4, constants.BLUE, "Lives")
-    hitpoints.prepare_self(540, 4, constants.RED, "Hitpoints")
-    score.prepare_self(1040, 4, constants.GREEN, "Score")
-    upgrades.prepare_self(20, 40, constants.GOLD, "Upgrades")
-    log_position.prepare_self(980, 40, constants.BLACK, "log_Pos")
-    log_collision.prepare_self(980, 80, constants.BLACK, "log_Col")
+    lives.prepare_self(20, 4, BLUE, "Lives")
+    hitpoints.prepare_self(540, 4, RED, "Hitpoints")
+    score.prepare_self(1040, 4, GREEN, "Score")
+    upgrades.prepare_self(20, 40, GOLD, "Upgrades")
+    #
+    log_position.prepare_self(980, MAX_Y - 40, BLACK, "log_Pos")
+    log_bullet_position.prepare_self(980, MAX_Y - 80, BLACK, "log_Bul")
+    log_collision.prepare_self(980, MAX_Y - 120, BLACK, "log_Col")
+    timer.prepare_self(20, MAX_Y - 40, BLACK, "Timer")
 
     # start the game
     keyboard_service = KeyboardService()
@@ -74,7 +79,6 @@ def main():
     script = Script()
     script.add_action("input", ControlActorPlayer(keyboard_service))
     script.add_action("input", ResetActorPositions(keyboard_service))
-    script.add_action("input", PrintPlayer(keyboard_service))
     script.add_action("update", MoveActorsAction())
     script.add_action("update", HandleCollisionsAction())
     script.add_action("update", HandleGameUpdates())

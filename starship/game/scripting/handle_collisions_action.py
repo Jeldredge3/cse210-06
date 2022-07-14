@@ -28,24 +28,35 @@ class HandleCollisionsAction(Action):
     def _handle_segment_collision(self, cast):
         """Sets the game over flag if the snake collides with one of its segments.
         """
+        # get player location.
         player = cast.get_first_actor("player")
         p_body = player.get_segments()[0:]
-        score = cast.get_first_actor("score") 
+        p_bullets = player.get_bullets()
 
+        # get the player's hitpoints and score.
         hitpoints = cast.get_first_actor("hitpoints")
         health = hitpoints.get_value()
-        
+        score = cast.get_first_actor("score")
+        current_score = score.get_value()
+
+        # check collisions:
         enemies = cast.get_actors("enemy")
         for enemy in enemies:
             e_body = enemy.get_segments()[0:]
             for e_segment in e_body:
+                # if enemy collides with the player, reduce the player's health.
                 for p_segment in p_body:
-                    if p_segment.get_position().equals(e_segment.get_position()):
-                        
-                        hitpoints._subtract(health)
-                        score._add(100)
-        #cast.remove_actor("player", player)
-
+                    if e_segment.get_position().equals(p_segment.get_position()):
+                        hitpoints._subtract(10)
+                        # display collision if console log is visible.
+                        if SHOW_CONSOLE_LOG == True:
+                            log_collision = cast.get_first_actor("log_col")
+                            log_collision.set_value(enemy.get_name())
+                # if enemy collides with a bullet, destroy the enemy.
+                for bullet in p_bullets:
+                    if e_segment.get_position().equals(bullet.get_position()):
+                        score._add(10)
+                        p_bullets.remove(bullet)
 
                 
     def _handle_pickup_collision(self, cast):
