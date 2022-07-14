@@ -20,12 +20,13 @@ class HandleGameUpdates(Action):
         p_bullets = player.get_bullets()
         p_segments = player.get_segments()
         hitpoints = cast.get_first_actor("hitpoints")
+        score = cast.get_first_actor("score")
         lives = cast.get_first_actor("lives")
         current_hp = hitpoints.get_value()
+        current_score = score.get_value()
         current_lives = lives.get_value()
-        # create an artificial timer since time.sleep() function isn't working.
-        time_counter = cast.get_first_actor("timer")
-        time_counter._add(1)
+
+        # updates the console log display features meant to help with testing.
         if SHOW_CONSOLE_LOG == True:
             log_position = cast.get_first_actor("log_pos")
             p_coord = p_segments[0].get_position()
@@ -45,27 +46,33 @@ class HandleGameUpdates(Action):
                 # change the player's ship to black.
                 for segment in p_segments:
                     segment.set_color(BLACK)
-                # reset the player's hitpoints to full, subtract one life from the player.
-                hitpoints._add(RESPAWN_HITPOINTS)
-                lives._subtract(1)
+                player.destroy_self()
             else:
                 # restore the player's ship's color to white.
                 for segment in p_segments:
                     segment.set_color(WHITE)
+                    
 
             # check if the player's lives and hitpoints have fallen to zero.
             if current_lives <= 0 and current_hp <= 0:
                 self._is_game_over = True
                 self._handle_game_over(cast)
-                # change the player's ship to black.
+                # change the player's ship to gray.
                 for segment in p_segments:
                     segment.set_color(BLACK)
-                player.toggle_fire(False)
             
+            if current_score >= 1000:
+                self._victory = True
 
     def _handle_game_over(self, cast):
         """Shows the 'game over' message when the player loses all lives.
         """
+        player = cast.get_first_actor("player")
+        p_segments = player.get_segments()
+        hitpoints = cast.get_first_actor("hitpoints")
+        score = cast.get_first_actor("score")
+        lives = cast.get_first_actor("lives")
+
         if self._is_game_over:
             x = int(MAX_X / 2)
             y = int(MAX_Y / 2)
@@ -76,13 +83,13 @@ class HandleGameUpdates(Action):
             message.set_position(position)
             cast.add_actor("messages", message)
 
-            player = cast.get_first_actor("player")
-            player.set_color = BLACK
-
             if self._victory == True:
                 message.set_text(f"Victory!")
+                
+        player.toggle_fire(False)
+        for segment in p_segments:
+            segment.set_color(BLACK)
 
-    def _handle_out_of_bounds(self, cast):
-        """Destroys objects that move out of bounds.
-        """
-        pass
+        score._lock_value(True)
+        hitpoints._lock_value(True)
+        lives._lock_value(True)

@@ -24,6 +24,7 @@ class Spaceship(Actor):
         """Ship segments goes in this order: 
         [Center, Middle, Front, Top-Left, Middle-left, Bottom-Left, Top-Right, Middle-Right, Bottom-Right]
         """
+        empty_blueprint           = ["", "", "", "", "", "", "", "", ""]
         ship_blueprint            = ["C", "M", "F", "TL", "ML", "BL", "TR", "MR", "BR"]
         ship_blueprint_rocket     = ["X", "| |", "A", "", "/", "|/", "", "\\", "\\|"]
         ship_blueprint_glider     = ["V", "| |", "i i", "", "|/", "|/", "", "\\|", "\\|"]
@@ -55,11 +56,17 @@ class Spaceship(Actor):
     def get_start_position(self):
         return self._start_position
     
-    def toggle_fire(self, Boolean):
-        if Boolean == False:
+    def toggle_fire(self, boolean):
+        if boolean == False:
             self._can_shoot = False
         else:
             self._can_shoot = True
+
+    def destroy_self(self):
+        self._is_destroyed = True
+    
+    def repair_self(self):
+        self._is_destroyed = False
 
     def move_next(self):
         # move all segments

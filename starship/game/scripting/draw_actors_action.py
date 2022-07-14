@@ -32,18 +32,22 @@ class DrawActorsAction(Action):
         enemies = cast.get_actors("enemy")
         for enemy in enemies:
             e_segments = enemy.get_segments()
-
+        # ===== Get Extras ===== #
         pickups = cast.get_actors("pickup")
+        particles = cast.get_actors("particle")
         # ===== Get HUD Elements ===== #
         score = cast.get_first_actor("score")
         hitpoints = cast.get_first_actor("hitpoints")
         lives = cast.get_first_actor("lives")
         upgrades = cast.get_first_actor("upgrades")
+        messages = cast.get_actors("messages")
+
+        # ===== Get Console Log Tools ===== #
         log_positon = cast.get_first_actor("log_pos")
         log_bullet_position = cast.get_first_actor("log_bul")
         log_collision = cast.get_first_actor("log_col")
-        timer = cast.get_first_actor("timer")
-        messages = cast.get_actors("messages")
+        timer_infinite = cast.get_first_actor("timer_inf")
+        timer_loop = cast.get_first_actor("timer_loop")
 
         # ===== Clear Screen & Draw Actors ===== #
         # ---
@@ -56,6 +60,7 @@ class DrawActorsAction(Action):
         self._video_service.draw_actors(enemies)
         self._video_service.draw_actors(e_segments)
         self._video_service.draw_actors(pickups)
+        self._video_service.draw_actors(particles)
         # interface actors
         self._video_service.draw_actor(score)
         self._video_service.draw_actor(hitpoints)
@@ -67,6 +72,7 @@ class DrawActorsAction(Action):
             self._video_service.draw_actor(log_positon)
             self._video_service.draw_actor(log_bullet_position)
             self._video_service.draw_actor(log_collision)
-            self._video_service.draw_actor(timer)
+            self._video_service.draw_actor(timer_infinite)
+            self._video_service.draw_actor(timer_loop)
         # ---
         self._video_service.flush_buffer()

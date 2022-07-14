@@ -1,9 +1,9 @@
 ## TEAM to do list:
 ```
 Priorities:
-[ ] Create enemies that start at the top and move down towards the player.
-[ ] Make enemies able to collide with bullets.
-[ ] Allow the player's segments to be able to collide with enemies
+[v] Create enemies that start at the top and move down towards the player.
+[v] Make enemies able to collide with bullets.
+[v] Allow the player's segments to be able to collide with enemies
 [ ] Create pickup items that can be collected by the player to grant Health, Lives, or Score.
 [ ] Create a child class of pickup objects that upgrades the player's weapon.
 Optional:

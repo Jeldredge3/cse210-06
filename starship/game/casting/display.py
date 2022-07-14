@@ -42,6 +42,33 @@ class Display(Actor):
         self._value = value
         self.update_display()
 
+class BooleanDisplay(Display):
+    """A heads-up display (HUD) element in the game which displays an Boolean value.
+
+    Attributes:
+        _name:              The name of the HUD element which is displayed.
+        _value:             The boolean(True/False) value that is displayed next to the text.
+    """
+    def __init__(self):
+        super().__init__()
+        self._name = "Boolean"
+        self._value = False
+        self._lock = False
+        self.update_display()
+
+    def toggle(self, boolean):
+        if self._lock == False:
+            if boolean == False:
+                self._value = False
+            else:
+                self._value = True
+    
+    def _lock_value(self, boolean):
+        if boolean == False:
+            self._lock = False
+        else:
+            self._lock = True
+
 class VariableDisplay(Display):
     """A heads-up display (HUD) element in the game which displays an integer value.
 
@@ -55,6 +82,7 @@ class VariableDisplay(Display):
         super().__init__()
         self._name = "Integer"
         self._value = 0
+        self._original_value = 0
         self._max_limit = float('inf')
         self._lock = False
         self.update_display()
@@ -74,6 +102,7 @@ class VariableDisplay(Display):
         elif name == "Score":
             self._value = 0
             self._max_limit = float('inf')
+        self._original_value = self._value
 
         self.set_position(self._position)
         self.update_display()
@@ -81,11 +110,17 @@ class VariableDisplay(Display):
     def get_max_limit(self):
         return self._max_limit
 
-    def _lock_value(self):
-        self._lock = True
+    def set_max_limit(self, new_limit):
+        self._max_limit = new_limit
 
-    def _unlock_value(self):
-        self._lock = False
+    def _lock_value(self, boolean):
+        if boolean == False:
+            self._lock = False
+        else:
+            self._lock = True
+
+    def _reset_value(self):
+        self._value = self._original_value
 
     def _add(self, points):
         """Adds the given points to the element's total points.
