@@ -1,4 +1,4 @@
-import constants
+from constants import *
 from game.casting.actor import Actor
 from game.shared.color import Color
 from game.shared.point import Point

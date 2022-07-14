@@ -1,4 +1,4 @@
-import constants
+from constants import *
 import random
 from game.casting.actor import Actor
 from game.shared.point import Point
@@ -9,7 +9,7 @@ class Bullet(Actor):
     def __init__(self):
         super().__init__()
         self._text = "o"
-        self._color = constants.YELLOW
+        self._color = YELLOW
         self._range = 10
         self._distance_counter = 0
         self._time_counter = 0
@@ -34,7 +34,7 @@ class MultiShot(Bullet):
     def __init__(self):
         super().__init__()
         self._text = "x"
-        self._color = constants.PURPLE
+        self._color = PURPLE
         self._range = 10
     
 class LongShot(Bullet):
@@ -43,13 +43,13 @@ class LongShot(Bullet):
     def __init__(self):
         super().__init__()
         self._text = "x"
-        self._color = constants.CYAN
+        self._color = CYAN
         self._range = 20
 
 class FlameThrower(Bullet):
     def __init__(self):
         super().__init__()
         self._text = "*"
-        fire_colors = [constants.FIRE0, constants.FIRE1, constants.FIRE2, constants.FIRE3]
+        fire_colors = [FIRE0, FIRE1, FIRE2, FIRE3]
         self._color = random.choice(fire_colors)
         self._range = 10

@@ -1,4 +1,4 @@
-import constants
+from constants import *
 import time
 import random
 from game.scripting.action import Action
@@ -19,7 +19,7 @@ class ControlActorsAction(Action):
             keyboard_service (KeyboardService): An instance of KeyboardService.
         """
         self._keyboard_service = keyboard_service
-        self._direction = Point(constants.CELL_SIZE, 0)
+        self._direction = Point(CELL_SIZE, 0)
             
 class ResetActorPositions(ControlActorsAction):
     """Reset the positions of both players when pressing 'space'.
@@ -39,27 +39,6 @@ class ResetActorPositions(ControlActorsAction):
         if self._keyboard_service.is_key_up('e'):
             p1 = cast.get_first_actor("player")
 
-class PrintPlayer(ControlActorsAction):
-    """Print player details in the console log when pressing 'tab'.
-    """
-    def execute(self, cast, script):
-        # ============ PLAYER ONE ============ #
-
-        if self._keyboard_service.is_key_down('tab'):
-            # Get Player_1 from Cast.
-            p1 = cast.get_first_actor("player")
-            p1_body = p1.get_body()
-            p1_length = len(p1.get_segments())
-            # Get Player_1 Position.
-            p1_pos = p1_body.get_position()
-            p1_x = p1_pos.get_x()
-            p1_y = p1_pos.get_y()
-            # Get Player_1 Color.
-            p1_color = p1.get_color()
-            p1_rgb = p1_color.to_tuple()
-                
-            print(f"(P1) Size = {p1_length}, Position = ({p1_x}, {p1_y})")
-
 class ControlActorPlayer(ControlActorsAction):
     """Conrols the movement of the Player with W, A, S, D.
     """
@@ -73,16 +52,16 @@ class ControlActorPlayer(ControlActorsAction):
         # ===== PLAYER MOVEMENT KEYS ===== #
         # left
         if self._keyboard_service.is_key_down('a'):
-            self._direction = Point(-constants.CELL_SIZE, 0)
+            self._direction = Point(-CELL_SIZE, 0)
         # right
         if self._keyboard_service.is_key_down('d'):
-            self._direction = Point(constants.CELL_SIZE, 0)
+            self._direction = Point(CELL_SIZE, 0)
         # up
         if self._keyboard_service.is_key_down('w'):
-            self._direction = Point(0, -constants.CELL_SIZE)
+            self._direction = Point(0, -CELL_SIZE)
         # down
         if self._keyboard_service.is_key_down('s'):
-            self._direction = Point(0, constants.CELL_SIZE)
+            self._direction = Point(0, CELL_SIZE)
 
         # change direction based on key press.
         player = cast.get_first_actor("player")
@@ -99,64 +78,39 @@ class ControlActorPlayer(ControlActorsAction):
             ship_pos = ship.get_position()
             pos_x = ship_pos.get_x()
             pos_y = ship_pos.get_y()
-            player.shoot(pos_x, pos_y - 2*constants.CELL_SIZE)
+            player.shoot(pos_x, pos_y - 2*CELL_SIZE)
 
-        # ===== TEMPORARY COMMANDS ===== #
-
-        """
+        # ===== PROGRAM TESTING COMMANDS ===== #
         score = cast.get_first_actor("score")
         hitpoints = cast.get_first_actor("hitpoints")
         lives = cast.get_first_actor("lives")
         upgrades = cast.get_first_actor("upgrades")
-        # lives - add
-        if self._keyboard_service.is_key_down('ins'):
-            lives._add(1)
-        # lives - subtract
-        if self._keyboard_service.is_key_down('del'):
-            lives._subtract(1)
-        # hitpoints - add
-        if self._keyboard_service.is_key_down('home'):
-            hitpoints._add(10)
-        # hitponts - subtract
-        if self._keyboard_service.is_key_down('end'):
-            hitpoints._subtract(10)
-        # score - add
-        if self._keyboard_service.is_key_down('page_up'):
-            score._add(15)
-        # score - subtract
-        if self._keyboard_service.is_key_down('page_down'):
-            score._subtract(15)
-        """
 
-        # ===== TEMPORARY COMMANDS ===== #
-        score = cast.get_first_actor("score")
-        hitpoints = cast.get_first_actor("hitpoints")
-        lives = cast.get_first_actor("lives")
-        upgrades = cast.get_first_actor("upgrades")
-        # lives - add
-        if self._keyboard_service.is_key_down('i'):
-            lives._add(1)
-        # lives - subtract
-        if self._keyboard_service.is_key_down('j'):
-            lives._subtract(1)
-        # hitpoints - add
-        if self._keyboard_service.is_key_down('o'):
-            hitpoints._add(10)
-        # hitponts - subtract
-        if self._keyboard_service.is_key_down('k'):
-            hitpoints._subtract(10)
-        # score - add
-        if self._keyboard_service.is_key_down('p'):
-            score._add(15)
-        # score - subtract
-        if self._keyboard_service.is_key_down('l'):
-            score._subtract(15)
+        if ALLOW_CHEATS == True:
+            # lives - add
+            if self._keyboard_service.is_key_down('i'):
+                lives._add(1)
+            # lives - subtract
+            if self._keyboard_service.is_key_down('j'):
+                lives._subtract(1)
+            # hitpoints - add
+            if self._keyboard_service.is_key_down('o'):
+                hitpoints._add(10)
+            # hitponts - subtract
+            if self._keyboard_service.is_key_down('k'):
+                hitpoints._subtract(10)
+            # score - add
+            if self._keyboard_service.is_key_down('p'):
+                score._add(15)
+            # score - subtract
+            if self._keyboard_service.is_key_down('l'):
+                score._subtract(15)
 
-        # inventory - append random item to list
-        upgrades_list = ["Laser Cannon", "Multi-Shot", "Rapid-Fire", "Overshield"]
-        rand_selection = random.choice(upgrades_list)
-        if self._keyboard_service.is_key_down(']'):
-            player._cycle_mode()
-        # inventory - remove last item from list
-        if self._keyboard_service.is_key_down('['):
-            pass
+            # inventory - append random item to list
+            upgrades_list = ["Laser Cannon", "Multi-Shot", "Rapid-Fire", "Overshield"]
+            rand_selection = random.choice(upgrades_list)
+            if self._keyboard_service.is_key_down(']'):
+                player._cycle_mode()
+            # inventory - remove last item from list
+            if self._keyboard_service.is_key_down('['):
+                pass
