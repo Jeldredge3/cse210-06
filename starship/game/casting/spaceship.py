@@ -19,6 +19,7 @@ class Spaceship(Actor):
         self._position = Point(x, y)
         # ===== Boolean Attributes ===== #
         self._can_shoot = True
+        self._can_move = True
         self._is_destroyed = False
         # ===== Ship Parts ===== #
         """Ship segments goes in this order: 
@@ -62,6 +63,12 @@ class Spaceship(Actor):
         else:
             self._can_shoot = True
 
+    def toggle_movement(self, boolean):
+        if boolean == False:
+            self._can_move = False
+        else:
+            self._can_move = True
+
     def destroy_self(self):
         self._is_destroyed = True
     
@@ -69,15 +76,16 @@ class Spaceship(Actor):
         self._is_destroyed = False
 
     def move_next(self):
+        if self._can_move:
         # move all segments
-        for segment in self._segments:
-            segment.move_next()
-        # update velocities
-        for i in range(len(self._segments) - 1, 0, -1):
-            trailing = self._segments[i]
-            previous = self._segments[i - 1]
-            velocity = previous.get_velocity()
-            trailing.set_velocity(velocity)
+            for segment in self._segments:
+                segment.move_next()
+            # update velocities
+            for i in range(len(self._segments) - 1, 0, -1):
+                trailing = self._segments[i]
+                previous = self._segments[i - 1]
+                velocity = previous.get_velocity()
+                trailing.set_velocity(velocity)
 
     def turn_ship(self, velocity):
         """Changes the velocity of the ship, which is stored as a Point() object. 

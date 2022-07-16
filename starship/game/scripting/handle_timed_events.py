@@ -2,7 +2,7 @@ import random
 from constants import *
 
 from game.casting.actor import Actor
-from game.casting.enemy_spaceship import Enemy
+from game.casting.enemy_spaceship import Enemy, BonusEnemy
 from game.scripting.action import Action
 from game.shared.point import Point
 
@@ -31,6 +31,8 @@ class HandleTimedEvents(Action):
         current_score = score.get_value()
         current_lives = lives.get_value()
         
+        enemies = cast.get_actors("enemy")
+
         timer_infinite = cast.get_first_actor("timer_inf")
         timer_loop = cast.get_first_actor("timer_loop")
         timer_respawn = cast.get_first_actor("timer_respawn")
@@ -69,7 +71,16 @@ class HandleTimedEvents(Action):
             timer_respawn._lock_value(False)
 
         # EVENT 1) creates an enemy when each time event has passed. 
-        timer_event_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+        timer_event_list = [0]
+        timer_event_frequency = 50
+        timer_event_length = 3000
+        counter = 0
+
+        # add time events to the time_event_list up until the maximum set length of the timer.
+        while counter < timer_event_length:
+            counter += timer_event_frequency
+            timer_event_list.append(counter)
+
         if inf_growing_time in timer_event_list:
             for time_event in timer_event_list:
                 if inf_growing_time == time_event: 
@@ -79,3 +90,15 @@ class HandleTimedEvents(Action):
                     # set the positon and color of the enemy. 
                     self.rand_x = random.randrange(0, MAX_X, CELL_SIZE)
                     enemy._build_ship(self.rand_x, 2*CELL_SIZE, RED)
+
+        # EVENT 2) creates special enemies when each time event has passed.
+        timer_event_list2 = [300, 900, 1200, 1500, 1800]
+        if inf_growing_time in timer_event_list2:
+            for time_event in timer_event_list2:
+                if inf_growing_time == time_event: 
+                    # create an enemy.
+                    enemy = BonusEnemy()
+                    cast.add_actor("enemy", enemy)
+                    # set the positon and color of the enemy. 
+                    self.rand_x = random.randrange(0, MAX_X, CELL_SIZE)
+                    enemy._build_ship(self.rand_x, 2*CELL_SIZE, PURPLE)

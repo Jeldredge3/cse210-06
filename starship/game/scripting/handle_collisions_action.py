@@ -47,7 +47,9 @@ class HandleCollisionsAction(Action):
                 # if enemy collides with the player, reduce the player's health.
                 for p_segment in p_body:
                     if e_segment.get_position().equals(p_segment.get_position()):
-                        hitpoints._subtract(10)
+                        hitpoints._subtract(health)
+                        score._subtract(50)
+                        enemy.destroy_self()
                         # display collision if console log is visible.
                         if SHOW_CONSOLE_LOG == True:
                             log_collision = cast.get_first_actor("log_col")
@@ -55,8 +57,9 @@ class HandleCollisionsAction(Action):
                 # if enemy collides with a bullet, destroy the enemy.
                 for bullet in p_bullets:
                     if e_segment.get_position().equals(bullet.get_position()):
-                        score._add(10)
+                        score._add(100)
                         p_bullets.remove(bullet)
+                        enemy.destroy_self()
 
                 
     def _handle_pickup_collision(self, cast):

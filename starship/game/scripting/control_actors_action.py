@@ -1,6 +1,7 @@
 from constants import *
 import time
 import random
+from game.casting.actor import Actor
 from game.scripting.action import Action
 from game.shared.point import Point
 
@@ -20,9 +21,12 @@ class ControlActorsAction(Action):
         """
         self._keyboard_service = keyboard_service
         self._direction = Point(CELL_SIZE, 0)
-            
+        self.unpaused = True
+
 class ResetActorPositions(ControlActorsAction):
-    """Reset the positions of both players when pressing 'space'.
+    """Reset the positions of both players when pressing ' '.
+
+    NOTE: does not work at this time.
     """
     def execute(self, cast, script):
         # ============ PLAYER ONE ============ #
@@ -86,6 +90,17 @@ class ControlActorPlayer(ControlActorsAction):
         lives = cast.get_first_actor("lives")
         upgrades = cast.get_first_actor("upgrades")
 
+        if self._keyboard_service.is_key_down('e'):
+            # pause the game when 'e' is pressed.
+            self.pause_game(cast, True)
+            self.unpaused = False
+        
+        if self._keyboard_service.is_key_down("r"):
+            # if game is paused, unpase the game when 'r' is pressed.
+            if self.unpaused == False:
+                self.pause_game(cast, False)
+                self.unpaused == True
+
         if ALLOW_CHEATS == True:
             # lives - add
             if self._keyboard_service.is_key_down('i'):
@@ -109,8 +124,74 @@ class ControlActorPlayer(ControlActorsAction):
             # inventory - append random item to list
             upgrades_list = ["Laser Cannon", "Multi-Shot", "Rapid-Fire", "Overshield"]
             rand_selection = random.choice(upgrades_list)
-            if self._keyboard_service.is_key_down(']'):
+            if self._keyboard_service.is_key_down('q'):
                 player._cycle_mode()
-            # inventory - remove last item from list
-            if self._keyboard_service.is_key_down('['):
-                pass
+    
+    def pause_game(self, cast, boolean):
+        """Pauses all movement in the game until function is called again.
+        """
+        pause_game = boolean
+
+        # get display elements
+        score = cast.get_first_actor("score")
+        hitpoints = cast.get_first_actor("hitpoints")
+        lives = cast.get_first_actor("lives")
+        # get ship objects
+        player = cast.get_first_actor("player")
+        enemies = cast.get_actors("enemy")
+        particles = cast.get_actors("particle")
+        # get timers
+        timer_infinite = cast.get_first_actor("timer_inf")
+        timer_loop = cast.get_first_actor("timer_loop")
+        timer_respawn = cast.get_first_actor("timer_respawn")
+
+        if pause_game == True:
+            # lock score, hitpoints, and lives
+            score._lock_value(True)
+            hitpoints._lock_value(True)
+            lives._lock_value(True)
+            # lock player, enemy, and particle movement 
+            player.toggle_movement(False)
+            player.toggle_fire(False)
+            for enemy in enemies:
+                enemy.toggle_movement(False)
+            for particle in particles:
+                particle.toggle_movement(False)
+            # lock timers
+            timer_infinite._lock_value(True)
+            timer_loop._lock_value(True)
+            timer_respawn._lock_value(True)
+
+            # create a message annoucing the game is paused.
+            x = int(MAX_X / 2)
+            y = int(MAX_Y / 2)
+            position = Point(x, y)
+            message = Actor()
+            message.set_text("Paused")
+            message.set_position(position)
+            message.set_color(YELLOW)
+            cast.add_actor("messages", message)
+        
+
+        if pause_game == False:
+            # unlock score, hitpoints, and lives
+            score._lock_value(False)
+            hitpoints._lock_value(False)
+            lives._lock_value(False)
+            # unlock player, enemy, and particle movement 
+            player.toggle_movement(True)
+            player.toggle_fire(True)
+            for enemy in enemies:
+                enemy.toggle_movement(True)
+            for particle in particles:
+                particle.toggle_movement(True)
+            # unlock timers
+            timer_infinite._lock_value(False)
+            timer_loop._lock_value(False)
+            timer_respawn._lock_value(False)
+
+            # remove the pause game message.
+            all_messages = cast.get_actors("messages")
+            if len(all_messages) > 0:
+                game_message = cast.get_first_actor("messages")
+                cast.remove_actor("messages", game_message)

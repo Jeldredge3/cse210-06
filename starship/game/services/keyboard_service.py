@@ -27,6 +27,7 @@ class KeyboardService:
         self._keys['k'] = pyray.KEY_K
         self._keys['p'] = pyray.KEY_P
         self._keys['l'] = pyray.KEY_L
+        self._keys['q'] = pyray.KEY_Q
         self._keys['['] = pyray.KEY_LEFT_BRACKET
         self._keys[']'] = pyray.KEY_RIGHT_BRACKET
         # ===== Player Movement Kebindings ===== #
@@ -36,8 +37,8 @@ class KeyboardService:
         self._keys['d'] = pyray.KEY_D # Player Right 
         # ===== Player Action Kebindings ===== #
         self._keys['space'] = pyray.KEY_SPACE # Player Shoot
-        self._keys['e'] = pyray.KEY_E
-        self._keys['p'] = pyray.KEY_P # Pause Game
+        self._keys['e'] = pyray.KEY_E # Pause Game
+        self._keys['r'] = pyray.KEY_R # Resume/Unpause the game
         self._keys['tab'] = pyray.KEY_TAB # ConsoleLog Help - Print Player
 
     def is_key_up(self, key):
