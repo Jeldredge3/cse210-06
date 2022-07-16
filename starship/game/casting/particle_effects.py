@@ -15,14 +15,21 @@ class Particle(Actor):
         self._x = 0
         self._y = 0
         self.set_text(self._text)
+        self._can_move = True
 
+    def toggle_movement(self, boolean):
+        if boolean == False:
+            self._can_move = False
+        else:
+            self._can_move = True
+            
     def prepare_self(self, pos_x, pos_y, text, color):
         self._x = pos_x
         self._y = pos_y
         self._position = Point(pos_x, pos_y)
         self._text = text
         self._color = color
-
+    
     def randomize(self):
         """Sets a random position, text, color, and speed for the particle.
         """
@@ -44,18 +51,20 @@ class Particle(Actor):
         """Causes the particle to decend from the top of the screen. Once the particle reaches the bottom, it reappears at the top.
         Passes through the speed of the object which determines the rate which it falls.
         """
-        obj_position = self.get_position()
-        obj_x = obj_position.get_x()
-        obj_y = obj_position.get_y()
-        obj_y += self._speed
-        pos_new = Point(obj_x, obj_y)
-        self.set_position(pos_new)
-        if obj_y >= MAX_Y:
-            rand_x = random.randrange(0, MAX_X, CELL_SIZE)
-            pos_reset = Point(rand_x, 0)
-            self.set_position(pos_reset)
+        if self._can_move:
+            obj_position = self.get_position()
+            obj_x = obj_position.get_x()
+            obj_y = obj_position.get_y()
+            obj_y += self._speed
+            pos_new = Point(obj_x, obj_y)
+            self.set_position(pos_new)
+            if obj_y >= MAX_Y:
+                rand_x = random.randrange(0, MAX_X, CELL_SIZE)
+                pos_reset = Point(rand_x, 0)
+                self.set_position(pos_reset)
 
     def _explosion(self):
         """Causes particles to travel in random directions.
         """
         pass
+

@@ -39,12 +39,14 @@ def main():
     # set the positon and color of the player. 
     player._build_ship(x, y, WHITE)
     
+    """
     # create an enemy.
     enemy = Enemy()
     cast.add_actor("enemy", enemy)
     # set the positon and color of the enemy. 
     enemy._build_ship(rand_x, 2*CELL_SIZE, RED)
-
+    """
+    
     # create background star particle effects
     for i in range(BACKGROUND_STAR_AMOUNT):
         star = Particle()

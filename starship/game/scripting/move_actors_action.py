@@ -20,7 +20,6 @@ class MoveActorsAction(Action):
         actors = cast.get_all_actors()
         player = cast.get_first_actor("player")
         enemies = cast.get_actors("enemy")
-        first_enemy = cast.get_first_actor("enemy")
         particles = cast.get_actors("particle")
 
         # ===== Move Bullets ===== #
@@ -34,10 +33,11 @@ class MoveActorsAction(Action):
                 bullets.pop(0)
             
         # ===== Move Enemy Ships ===== #
-        for enemy in enemies:
-            direction = Point(0, CELL_SIZE)
-            enemy.turn_ship(direction)
-            enemy.move_next()
+        if len(enemies) > 0:
+            for enemy in enemies:
+                direction = enemy.get_direction()
+                enemy.turn_ship(direction)
+                enemy.move_next()
 
         # ===== Move Particles ==== #
         for particle in particles:    
